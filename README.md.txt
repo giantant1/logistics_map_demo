@@ -1,6 +1,6 @@
 # 📦 Order Simulation Map
 
-This Streamlit app simulates the flow of orders across various cities and visualizes them on a live map using Pydeck.
+This Streamlit app simulates the flow of orders across various cities and visualizes them on a live map.
 
 ## 🚀 Features
 
