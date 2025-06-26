@@ -37,7 +37,7 @@ orders = [generate_order() for _ in range(50)]
 df = pd.DataFrame(orders)
 
 # Streamlit UI
-st.title("🚚 Logistics Order Map (Folium - Stable Version)")
+st.title("Logistics Order Map (Folium - Stable Version)")
 st.dataframe(df)
 
 # Create Folium map
