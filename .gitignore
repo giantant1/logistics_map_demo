@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+*.env
+.venv/
+venv/
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Compiled notebooks (if using Jupyter)
+.ipynb_checkpoints/
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Streamlit config cache
+.streamlit/
+
+# Other temp files
+*.bak
+
