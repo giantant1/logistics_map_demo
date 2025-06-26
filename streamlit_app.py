@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pydeck as pdk
+import folium
+from streamlit_folium import st_folium
 import random
 from datetime import datetime
 
@@ -16,7 +17,6 @@ locations = [
     {'city': 'Denver', 'lat': 39.7392, 'lon': -104.9903}
 ]
 
-# Order generator
 def generate_order():
     loc = random.choice(locations)
     return {
@@ -32,31 +32,29 @@ def generate_order():
         'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
-# Streamlit UI
-st.title("📦 Live Order Simulation Map")
-st.markdown("Real-time orders mapped with Pydeck!")
-
+# Generate sample orders
 orders = [generate_order() for _ in range(50)]
 df = pd.DataFrame(orders)
 
+# Streamlit UI
+st.title("🚚 Logistics Order Map with Folium")
 st.dataframe(df)
 
-st.pydeck_chart(pdk.Deck(
-    map_style="mapbox://styles/mapbox/light-v9",
-    initial_view_state=pdk.ViewState(
-        latitude=39.5,
-        longitude=-98.35,
-        zoom=3,
-        pitch=40,
-    ),
-    layers=[
-        pdk.Layer(
-            'ScatterplotLayer',
-            data=df,
-            get_position='[lon, lat]',
-            get_fill_color='[180, 0, 200, 160]',
-            get_radius=40000,
-        ),
-    ],
-))
+# Create Folium map centered on U.S.
+m = folium.Map(location=[39.5, -98.35], zoom_start=4)
+
+# Add order markers
+for _, row in df.iterrows():
+    tooltip = f"{row['city']} | {row['part_id']} | Qty: {row['quantity']}"
+    folium.Marker(
+        location=[row['lat'], row['lon']],
+        popup=f"Order: {row['order_id']}<br>Customer: {row['customer_id']}<br>Vehicle: {row['vehicle']}<br>Status: In Transit",
+        tooltip=tooltip,
+        icon=folium.Icon(color="purple", icon="truck", prefix='fa')
+    ).add_to(m)
+
+# Display map
+st_folium(m, width=700, height=500)
+
+
 
