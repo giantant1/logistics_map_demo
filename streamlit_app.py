@@ -5,7 +5,7 @@ from streamlit_folium import folium_static
 import random
 from datetime import datetime
 
-# Sample data
+# Fake data config
 parts = ['P-SSD01', 'P-RAM16', 'P-GPU3080', 'P-CPU12', 'P-MB550']
 vehicles = ['Truck-01', 'Truck-02', 'Plane-1', 'Truck-03', 'Plane-2']
 customers = [f'C{1000+i}' for i in range(5000)]
@@ -17,6 +17,7 @@ locations = [
     {'city': 'Denver', 'lat': 39.7392, 'lon': -104.9903}
 ]
 
+# Simulated data generator
 def generate_order():
     loc = random.choice(locations)
     return {
@@ -36,15 +37,28 @@ def generate_order():
 orders = [generate_order() for _ in range(50)]
 df = pd.DataFrame(orders)
 
-# Streamlit UI
-st.title("Logistics Order Map (Folium - Stable Version)")
-st.dataframe(df)
+# Sidebar filters
+st.sidebar.header("🔍 Filter Orders")
+selected_cities = st.sidebar.multiselect("Filter by City", options=df['city'].unique(), default=df['city'].unique())
+selected_vehicles = st.sidebar.multiselect("Filter by Vehicle", options=df['vehicle'].unique(), default=df['vehicle'].unique())
 
-# Create Folium map
+# Apply filters
+filtered_df = df[(df['city'].isin(selected_cities)) & (df['vehicle'].isin(selected_vehicles))]
+
+# KPIs
+st.title("Logistics Dashboard")
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Orders", len(filtered_df))
+col2.metric("Avg Quantity", int(filtered_df['quantity'].mean()))
+col3.metric("Air vs Ground", f"{(filtered_df['ship_method'].value_counts().get('Air', 0))}  / {(filtered_df['ship_method'].value_counts().get('Ground', 0))}")
+
+# Data table
+st.subheader("Order Details")
+st.dataframe(filtered_df, use_container_width=True)
+
+# Map
 m = folium.Map(location=[39.5, -98.35], zoom_start=4)
-
-for _, row in df.iterrows():
-    tooltip = f"{row['city']} | {row['part_id']} | Qty: {row['quantity']}"
+for _, row in filtered_df.iterrows():
     folium.Marker(
         location=[row['lat'], row['lon']],
         popup=f"""
@@ -53,9 +67,9 @@ for _, row in df.iterrows():
             <b>Vehicle:</b> {row['vehicle']}<br>
             <b>Status:</b> In Transit
         """,
-        tooltip=tooltip,
+        tooltip=f"{row['city']} | {row['part_id']} | Qty: {row['quantity']}",
         icon=folium.Icon(color="purple", icon="info-sign")
     ).add_to(m)
 
-# Show map using stable renderer
+st.subheader("Orders Map")
 folium_static(m, width=700, height=500)
