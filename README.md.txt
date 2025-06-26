@@ -1,14 +1,14 @@
-# 📦 Order Simulation Map
+# Order Simulation Map
 
 This Streamlit app simulates the flow of orders across various cities and visualizes them on a live map.
 
-## 🚀 Features
+## Features
 
 - Randomized order simulation with parts, vehicles, and locations
 - Dynamic table with latest orders
 - Interactive Pydeck map displaying shipment points
 
-## ▶️ Getting Started
+## Getting Started
 
 1. Clone the repository:
    ```bash
