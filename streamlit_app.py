@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import folium
-from streamlit_folium import st_folium
+from streamlit_folium import folium_static
 import random
 from datetime import datetime
 
@@ -37,24 +37,25 @@ orders = [generate_order() for _ in range(50)]
 df = pd.DataFrame(orders)
 
 # Streamlit UI
-st.title("🚚 Logistics Order Map with Folium")
+st.title("🚚 Logistics Order Map (Folium - Stable Version)")
 st.dataframe(df)
 
-# Create Folium map centered on U.S.
+# Create Folium map
 m = folium.Map(location=[39.5, -98.35], zoom_start=4)
 
-# Add order markers
 for _, row in df.iterrows():
     tooltip = f"{row['city']} | {row['part_id']} | Qty: {row['quantity']}"
     folium.Marker(
         location=[row['lat'], row['lon']],
-        popup=f"Order: {row['order_id']}<br>Customer: {row['customer_id']}<br>Vehicle: {row['vehicle']}<br>Status: In Transit",
+        popup=f"""
+            <b>Order:</b> {row['order_id']}<br>
+            <b>Customer:</b> {row['customer_id']}<br>
+            <b>Vehicle:</b> {row['vehicle']}<br>
+            <b>Status:</b> In Transit
+        """,
         tooltip=tooltip,
-        icon=folium.Icon(color="purple", icon="truck", prefix='fa')
+        icon=folium.Icon(color="purple", icon="info-sign")
     ).add_to(m)
 
-# Display map
-st_folium(m, width=700, height=500)
-
-
-
+# Show map using stable renderer
+folium_static(m, width=700, height=500)
