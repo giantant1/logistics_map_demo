@@ -6,7 +6,7 @@ This Streamlit app simulates the flow of orders across various cities and visual
 
 - Randomized order simulation with parts, vehicles, and locations
 - Dynamic table with latest orders
-- Interactive Pydeck map displaying shipment points
+- Interactive map displaying shipment points
 
 ## Getting Started
 
